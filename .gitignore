@@ -1,0 +1,14 @@
+*~
+*.dump
+*.log
+*.rrd
+*.beam
+deps/*
+*.autosave
+*.log
+priv/tmp/*
+priv/data
+*.sublime-project
+*.sublime-workspace
+tmp/*
+.eunit

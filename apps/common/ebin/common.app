@@ -1,0 +1,9 @@
+{application,common,
+             [{description,[]},
+              {vsn,"1"},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {mod,{common_app,[]}},
+              {env,[]},
+              {modules,[common_app,common_sup,distributed_node,
+                        distribution_tools,tools]}]}.
