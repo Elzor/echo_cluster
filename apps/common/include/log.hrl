@@ -1,13 +1,15 @@
 -ifndef(LOG_HRL).
 -define(LOG_HRL, true).
 
-%-define(debug, true). % Do not uncomment this line in production!!! Uncomment only for local debugging.
+% -define(debug, true). % Do not uncomment this line in production!!! Uncomment only for local debugging.
 
 -ifdef(debug).
 
+-include_lib("eunit/include/eunit.hrl").
+
 -define(TRC(Format),          error_logger:info_report(string:substr(?FILE,string:rchr(?FILE, $/) + 1) ++ ":~p ~s",[?LINE,Format])).
--define(DBG(Format),          error_logger:info_msg("DBG, " ++ Format)).
--define(DBG(Format,Data),     error_logger:info_msg("DBG, " ++ Format,Data)).
+-define(DBG(Format),          ?debugVal(Format)).
+-define(DBG(Format,Data),     ?debugFmt(Format,Data)).
 -define(DBG_MOD(Format),      error_logger:info_msg("DBG:~p:~p, " ++ Format, [?MODULE, ?LINE])).
 -define(DBG_MOD(Format, Data),error_logger:info_msg("DBG:~p:~p, " ++ Format, [?MODULE, ?LINE | Data])).
 -define(DBG_RPT(Report),      error_logger:info_report(Report)).
@@ -16,8 +18,8 @@
 -else.
 
 -define(TRC(Format),          ok).
--define(DBG(Format),          ok).
--define(DBG(Format,Data),     ok).
+-define(DBG(Format),          fun(_)  -> ok end(Format)).
+-define(DBG(Format,Data),     fun(_,_)-> ok end(Format,Data)).
 -define(DBG_MOD(Format),      ok).
 -define(DBG_MOD(Format,Data), ok).
 -define(DBG_RPT(Report),      ok).
@@ -25,7 +27,6 @@
 
 -endif.
 
-%-ifdef(write_log).	%% Comment to write logs
 -define(LOG(Format),          error_logger:info_msg("~p:~p, " ++ Format, [?MODULE, ?LINE])).
 -define(LOG(Format, Data),    error_logger:info_msg("~p:~p, " ++ Format, [?MODULE, ?LINE | Data])).
 -define(LOG_MOD(Format),      error_logger:info_msg("~p:~p, " ++ Format, [?MODULE, ?LINE])).
@@ -34,13 +35,6 @@
 -define(LOG_RPT(Type,Report), error_logger:info_report(Type,Report)).
 -define(LOG_FUN(Format, Data),error_logger:info_msg("~p:~p:~p, " ++ Format, [?MODULE, ?CURRENT_FUN_NAME_STR, ?LINE | Data])).
 -define(LOG_FUN(Format),      error_logger:info_msg("~p:~p:~p, " ++ Format, [?MODULE, ?CURRENT_FUN_NAME_STR, ?LINE])).
-
-%-else.
-%-define(LOG(Format),          ok).
-%-define(LOG(Format, Data),    ok).
-%-define(LOG_RPT(Report),      ok).
-%-define(LOG_RPT(Type,Report), ok).
-%-endif.
 
 -define(WRN(Format),          error_logger:warning_msg(Format)).
 -define(WRN(Format, Data),    error_logger:warning_msg(Format,Data)).

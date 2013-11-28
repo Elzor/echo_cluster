@@ -59,7 +59,7 @@ start_node(NodeName, UserParams) ->
     Node = distribution_tools:construct_node_name(NodeName),
     distribution_tools:start_node(list_to_atom(NodeName), Params),
     distribution_tools:poll_until(fun() ->
-                pong == (catch gen_server:call({?SERVER_NAME, Node}, ping))
+            pong == (catch gen_server:call({?SERVER_NAME, Node}, ping))
         end,
         10, 500 ),
     Node.

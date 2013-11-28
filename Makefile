@@ -4,14 +4,6 @@ ERL      	?= erl +A 4 +K true
 APP      	:= echo_cluster
 CUR_VERS    := 0.0.1
 REL_APP  	:= echo_cluster
-REBAR    	?= rebar
-DIALYZER 	?= dialyzer
-MKDIR 		?= mkdir
-RM    		?= rm
-MV    		?= mv
-CP    		?= cp
-CD    		?= cd
-SHELL 		?= sh
 INCLUDE_DIR := include
 SRC_DIR     := src
 ERL_LIBS	:= apps:deps:plugins
@@ -20,26 +12,22 @@ APPS   := $(a)
 SUITES := $(s)
 SDIR := `pwd`
 
-.SILENT: init_rel
-
 .PHONY: deps
 
 all: deps compile
 
 compile:
-	@$(REBAR) compile
+	@rebar compile
 
 deps:
-	@$(REBAR) get-deps
+	@rebar get-deps
 
 clean:
-	@$(REBAR) clean
+	@rebar clean
 
 distclean: clean
-	@$(REBAR) delete-deps
+	@rebar delete-deps
 
-docs:
-	@$(ERL) -noshell -run edoc_run application '$(APP)' '"."' '[]'
 
 # Hot patching
 sync:
@@ -52,19 +40,22 @@ sync:
 #	make test a=edht s=simple_test :: Test module in one application
 #	make test a=edht               :: Test one application
 test: compile
-	$(REBAR) eunit apps=$(a) suites=$(s) tests=$(t) skip_deps=true
+	rebar eunit apps=$(a) suites=$(s) tests=$(t) skip_deps=true
 
 # Run
 #   usage example
 #   make run master || make run slave
 run: rel
-	@$(SHELL) ./rel/common/$(REL_APP)/bin/$(REL_APP) console $(filter-out $@, $(MAKECMDGOALS))
+	@sh ./rel/common/$(REL_APP)/bin/$(REL_APP) console $(filter-out $@, $(MAKECMDGOALS))
 
 
 # Releases
-rel:  all common_rel
+rel:  all common_rel_clean nodes_rel_clean
+	@rebar generate
 
 # Common release for local run
-common_rel:
-	@$(RM) -rf rel/common/$(REL_APP)
-	@$(REBAR) generate
+common_rel_clean:
+	@rm -rf rel/common/$(REL_APP)
+
+nodes_rel_clean:
+	@rm -rf rel/node{1..7}/$(REL_APP)

@@ -8,5 +8,11 @@
                   stdlib
                  ]},
   {mod, { echo_cluster_app, []}},
-  {env, []}
+  {env, [
+    {nodeid, 1},
+    {ipaddress, {127,0,0,1}},
+    {port, 5000},
+    {cluster, []},
+    {tick_interval_ms, 1000}
+  ]}
  ]}.

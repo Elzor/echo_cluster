@@ -4,5 +4,9 @@
               {registered,[]},
               {applications,[kernel,stdlib]},
               {mod,{echo_cluster_app,[]}},
-              {env,[]},
-              {modules,[echo_cluster_app,echo_cluster_sup]}]}.
+              {env,[{nodeid,1},
+                    {ipaddress,{127,0,0,1}},
+                    {port,5000},
+                    {cluster,[]},
+                    {tick_interval_ms,1000}]},
+              {modules,[cluster_gate_fsm,echo_cluster_app,echo_cluster_sup]}]}.

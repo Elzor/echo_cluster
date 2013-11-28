@@ -27,13 +27,13 @@ construct_node_name(Name) when is_list(Name) ->
 %%  {run_function, {Module, Function}}
 remote_start_node(Node, Params) ->
     %% ?TRC(""),
-    Cookie = create_cookie_string(),
-    NodeString = create_sname_string(Node),
+    Cookie            = create_cookie_string(),
+    NodeString        = create_sname_string(Node),
     ContactNodeString = create_contact_node_string(Params),
-    StartFunction = create_start_function_string(Params),
-    PAString = create_pa_string(Params),
-    AppParams = create_app_params(Params),
-    CmdString = "start \""++NodeString++"\" erl -noshell" ++ NodeString ++ Cookie ++
+    StartFunction     = create_start_function_string(Params),
+    PAString          = create_pa_string(Params),
+    AppParams         = create_app_params(Params),
+    CmdString         = "start \""++NodeString++"\" erl -noshell" ++ NodeString ++ Cookie ++
         ContactNodeString ++ StartFunction ++ PAString ++ AppParams,
     ?LOG("CmdString = ~s",[CmdString]),
     Fun = fun() ->
@@ -46,7 +46,7 @@ remote_start_node(Node, Params) ->
 
 start_node(Node,Params) ->
     {ok,HostName} = inet:gethostname(),
-    Host = list_to_atom(HostName),
+    Host          = list_to_atom(HostName),
     start_node(Host,Node,Params).
 
 start_node(Host,Node,Params) ->
@@ -62,8 +62,6 @@ start_node(Host,Node,Params) ->
                 make_rsh_config()
                 ]
             ),
-    ?DBG("start node, ~p,~p, ~s", [Host,Node,ParamsStr]),
-    % ?debugFmt("~p",[ParamsStr]),
     StartRes = slave:start(Host,Node,ParamsStr),
     ?assertMatch({ok, _NodeName}, StartRes),
     StartRes.
@@ -80,10 +78,8 @@ create_config_string(Params) ->
     case proplists:get_value(config_file, Params) of
         ConfigFile when is_list(ConfigFile) ->
             case check_config_file(ConfigFile) of
-                true ->
-                    " -config " ++ ConfigFile;
-                _ ->
-                    ""
+                true -> " -config " ++ ConfigFile;
+                _ -> ""
             end;
         _ -> ""
     end.
@@ -116,15 +112,13 @@ create_arg_string(Arg) when is_list(Arg) ->
 
 create_pa_string(Params) ->
     case proplists:get_value(pa, Params) of
-        Path when is_list(Path) ->
-            " -pa "++ filename:nativename(Path);
+        Path when is_list(Path) -> " -pa "++ filename:nativename(Path);
         _ -> ""
     end.
 
 create_app_params(Params) ->
     case proplists:get_value(app_params, Params) of
-        AppParams when is_list(AppParams) ->
-            process_app_params(AppParams, "");
+        AppParams when is_list(AppParams) -> process_app_params(AppParams, "");
         _ -> ""
     end.
 
@@ -132,9 +126,9 @@ process_app_params([], ResultString) ->
     %% ?LOG("process_app_params: ~s", [ResultString]),
     ResultString;
 process_app_params([ {App, Param, Value} | TailParams], ResultString) ->
-    AppString = " -" ++ atom_to_list(App),
-    ParamString = " " ++ atom_to_list(Param),
-    ValueString = " \"" ++ lists:flatten(io_lib:format("~w",[Value])) ++ "\"",
+    AppString       = " -" ++ atom_to_list(App),
+    ParamString     = " " ++ atom_to_list(Param),
+    ValueString     = " \"" ++ lists:flatten(io_lib:format("~w",[Value])) ++ "\"",
     NewResultString = ResultString ++  AppString ++ ParamString ++ ValueString,
     process_app_params(TailParams, NewResultString).
 
@@ -185,10 +179,8 @@ replace_char_acc(_, _, [], Acc) ->
     lists:reverse(Acc);
 replace_char_acc(Char, String, [Head | Tail], Acc) ->
     if
-        Char == Head ->
-            replace_char_acc(Char, String, Tail, [String | Acc]);
-        true ->
-            replace_char_acc(Char, String, Tail, [Head | Acc])
+        Char == Head -> replace_char_acc(Char, String, Tail, [String | Acc]);
+        true -> replace_char_acc(Char, String, Tail, [Head | Acc])
     end.
 
 
