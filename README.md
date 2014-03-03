@@ -26,7 +26,7 @@ https://www.evernote.com/shard/s380/sh/71ea3cd1-ad65-44f9-a8b2-78754c26010e/c331
     application:stop(echo_cluster).
     application:start(echo_cluster).
 
-Что нужно, чтобы собрать и проверить
+Что нужно, чтобы собрать и запустить проект
 ---------------------
 -   debian 7 или ubuntu >12.04 (код и релизы не тестировались под BSD, Mac и Win)
 -   make,
@@ -62,6 +62,7 @@ Build notice
 
 Что Вы должны увидеть после запуска make test
 ---------------------
+```
 λ ~/projects/echo_cluster/ master* make test
 ...
 ==> echo_cluster (eunit)
@@ -97,3 +98,4 @@ module 'distributed_tests'
 =======================================================
   All 8 tests passed.
 ...
+```
